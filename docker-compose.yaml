@@ -1,0 +1,20 @@
+version: '3.9'
+
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: chellenge
+    ports:
+      - '3000:3000'
+    volumes:
+      - ./my_react_app:/myprofile
+      - /myprofile/node_modules
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    networks:
+      - react_app_network
+
+networks:
+  react_app_network:
