@@ -21,11 +21,11 @@ html, body, #root, .app {
   justify-content: center;
   align-items: center;
   height: 100%;
-  background-color: #f5f5f5;
+  background-image: url('./assets/background.jpg');
 }
 
 .join-form {
-  background: white;
+  /* background: linear-gradient(0deg, rgb(241, 165, 222) 0%, rgb(216, 190, 210) 35%, rgb(231, 170, 216) 50%); */
   padding: 2rem;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -34,12 +34,14 @@ html, body, #root, .app {
 }
 
 .join-form h1 {
-  color: #007bff;
+  font: Tahoma (sans-serif);
+  color: #ef9ac4;
   margin-bottom: 1rem;
   text-align: center;
 }
 
 .join-form h2 {
+  color: rgb(210, 195, 195);
   margin-bottom: 1.5rem;
   text-align: center;
 }
@@ -49,6 +51,7 @@ html, body, #root, .app {
 }
 
 .form-group label {
+  color: rgb(210, 195, 195);
   display: block;
   margin-bottom: 0.5rem;
   font-weight: 500;
@@ -65,7 +68,7 @@ html, body, #root, .app {
 .join-button {
   width: 100%;
   padding: 0.75rem;
-  background-color: #007bff;
+  background-color: #ef9ac4;
   color: white;
   border: none;
   border-radius: 4px;
@@ -75,7 +78,7 @@ html, body, #root, .app {
 }
 
 .join-button:hover {
-  background-color: #0069d9;
+  background-color: #eb68aa;
 }
 
 /* Chat View */
@@ -86,14 +89,16 @@ html, body, #root, .app {
 }
 
 .chat-header {
+  color: #ef9ac4;
   padding: 1rem;
-  background-color: #007bff;
-  color: white;
+  background-image: url('./assets/background2.png');
   text-align: center;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .chat-header h2 {
+  color: white;
+  font-family:Georgia, 'Times New Roman', Times, serif;
   margin-bottom: 0.25rem;
 }
 
@@ -120,7 +125,7 @@ html, body, #root, .app {
   padding: 1rem;
   overflow-y: auto;
   background-color: #e5ddd5;
-  background-image: url('https://web.whatsapp.com/img/bg-chat-tile-light_a4be512e7195b6b733d9110b408f075d.png');
+  background-image: url('./assets/background.jpg');
   background-repeat: repeat;
 }
 
@@ -154,7 +159,8 @@ html, body, #root, .app {
 }
 
 .message.sent .message-bubble {
-  background-color: #dcf8c6;
+  background-image: url('./assets/background2.png');
+  background-color: #ef9ac4;
   color: #000;
   border-bottom-right-radius: 0;
 }
@@ -215,7 +221,7 @@ html, body, #root, .app {
 
 .send-button {
   padding: 0 1.5rem;
-  background-color: #007bff;
+  background-color: #ef9ac4;
   color: white;
   border: none;
   border-radius: 20px;
@@ -225,7 +231,7 @@ html, body, #root, .app {
 }
 
 .send-button:hover {
-  background-color: #0069d9;
+  background-color: #eb68aa;
 }
 
 /* Scrollbar styling */
@@ -243,6 +249,7 @@ html, body, #root, .app {
 }
 
 .error-message {
+
   color: #ff4d4f;
   background: #fff2f0;
   padding: 8px 12px;
@@ -250,6 +257,14 @@ html, body, #root, .app {
   margin-bottom: 16px;
   border: 1px solid #ffccc7;
   animation: fadeIn 0.3s ease-in;
+  /* display: none; */
+}
+
+.error-message.hidden {
+  display: none;
+}
+.error-message.visible {
+  display: flex;
 }
 
 @keyframes fadeIn {

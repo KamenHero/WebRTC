@@ -14,8 +14,7 @@ function App() {
 
   const channel = {
     id: 1,
-    name: 'General Chat',
-    description: 'Welcome to the general chat room'
+    name: 'Welcome to the general chat room',
   };
 
   const setupWebSocket = () => {
@@ -42,8 +41,9 @@ function App() {
       console.log("Received:", message);
       
       
-      if (message.type === "username_taken") {
+      if (message.type === "error") {
         setJoinError(`Username "${username}" is already taken. Please choose another.`);
+        console.log("here");
         setIsJoining(false);
         setIsNameTaken(true);
         
@@ -169,9 +169,11 @@ function App() {
     if (username.trim() === '' || isJoining) return;
 
     // Reset all error/join states
+    // console.log(joinError);
     setJoinError('');
     setIsJoining(true);
     setIsNameTaken(false);
+    // console.log("here");
 
     // Force WebSocket reconnection
     setupWebSocket();
@@ -218,11 +220,11 @@ function App() {
               <h2>Join the Chat</h2>
               
               {/* Show error only here (not in chat) */}
-              {joinError && (
-                <div className="error-message">
+              {
+                <div className="error-message" style={{display: joinError ? 'flex' : 'none'}}>
                   {joinError}
                 </div>
-              )}
+              }
               
               <form onSubmit={handleJoinChat}>
                 <div className="form-group">
@@ -253,7 +255,7 @@ function App() {
         <div className="chat-view">
           <header className="chat-header">
             <h2>#{channel.name}</h2>
-            <div className="channel-description">{channel.description}</div>
+            {/* <div className="channel-description">{channel.description}</div> */}
             <div className="user-info">Logged in as: {username}</div>
           </header>
           
