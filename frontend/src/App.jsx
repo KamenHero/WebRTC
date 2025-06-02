@@ -6,7 +6,7 @@ function App() {
   const [username, setUsername] = useState('');
   const [messages, setMessages] = useState([]);
   const [inputValue, setInputValue] = useState('');
-  const [joinError, setJoinError] = useState('');
+  const [joinError, setJoinError] = useState(null);
   const [isJoining, setIsJoining] = useState(false);
   const [isNameTaken, setIsNameTaken] = useState(false);
   const messagesEndRef = useRef(null);
@@ -19,6 +19,10 @@ function App() {
   };
 
   const setupWebSocket = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+      socketRef.current = null;
+    }
     const userId = crypto.randomUUID();
     socketRef.current = new WebSocket(`ws://localhost:8000/ws/chat/${userId}`);
 
@@ -28,28 +32,33 @@ function App() {
         type: "join_channel",
         user_info: { name: username }
       }));
+      setJoinError('');
+      setIsNameTaken(false);
+      setIsJoining(false);
     };
 
     socketRef.current.onmessage = (event) => {
       const message = JSON.parse(event.data);
       console.log("Received:", message);
       
+      
       if (message.type === "username_taken") {
-        setJoinError(`Username '${username}' is already taken. Please choose another name.`);
-        setIsJoining(false);  // Reset joining state
-        setIsNameTaken(true); // Mark name as taken
+        setJoinError(`Username "${username}" is already taken. Please choose another.`);
+        setIsJoining(false);
+        setIsNameTaken(true);
         
+        // Close the WebSocket connection
         if (socketRef.current) {
           socketRef.current.close();
           socketRef.current = null;
         }
-      
-        // Auto-clear error after 3 seconds and allow retry
+        
+        // Clear the error after 3 seconds
         setTimeout(() => {
-          setIsNameTaken(false);
           setJoinError('');
+          setIsNameTaken(false);
         }, 3000);
-        return;
+        return; // Important: Skip adding this as a chat message
       }
       
       if (message.type === "join_success") {
@@ -64,7 +73,7 @@ function App() {
       const isSystem = message.sender?.name === 'System';
       
       setMessages(prev => [...prev, {
-        id: Date.now(),
+        id: crypto.randomUUID(),
         text: message.content || message.message,
         sender: {
           id: isCurrentUser ? 1 : (isSystem ? 0 : 2),
@@ -86,7 +95,7 @@ function App() {
       console.log('WebSocket disconnected', event);
       if (currentView !== 'join') {
         setMessages(prev => [...prev, {
-          id: Date.now(),
+          id: crypto.randomUUID(),
           text: "Connection lost. Trying to reconnect...",
           sender: { id: 0, name: 'System' },
           timestamp: new Date().toLocaleTimeString(),
@@ -104,14 +113,12 @@ function App() {
   };
 
   useEffect(() => {
-    if (currentView === 'chat') {
-      return () => {
-        if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-          socketRef.current.close();
-        }
-      };
-    }
-  }, [currentView]);
+    return () => {
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, []);
 
   useEffect(() => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -123,7 +130,7 @@ function App() {
 
     // Optimistic UI update
     const newMessage = {
-      id: Date.now(),
+      id: crypto.randomUUID(),
       text: inputValue,
       sender: {
         id: 1,
@@ -155,26 +162,39 @@ function App() {
   //   setupWebSocket();
   // };
 
+  const timeoutRef = useRef();
+
   const handleJoinChat = (e) => {
     e.preventDefault();
     if (username.trim() === '' || isJoining) return;
-    
+
+    // Reset all error/join states
     setJoinError('');
     setIsJoining(true);
     setIsNameTaken(false);
+
+    // Force WebSocket reconnection
     setupWebSocket();
-    setTimeout(() => {
+
+    // Timeout fallback (if server doesn't respond)
+    timeoutRef.current = setTimeout(() => {
       if (isJoining) {
-        setJoinError("Join request timed out. Please try again.");
+        setJoinError("Connection timed out. Please try again.");
         setIsJoining(false);
-        if (socketRef.current) {
-          socketRef.current.close();
-          socketRef.current = null;
-        }
+        if (socketRef.current) socketRef.current.close();
       }
     }, 5000);
-    // return
   };
+
+  // Move the cleanup effect to the component's main useEffect
+  useEffect(() => {
+    return () => {
+      clearTimeout(timeoutRef.current);
+      if (socketRef.current) {
+        socketRef.current.close();
+      }
+    };
+  }, []);
   
   // Then in the WebSocket onmessage handler:
   // if (message.type === "username_taken") {
@@ -194,10 +214,17 @@ function App() {
       {currentView === 'join' ? (
         <div className="join-view">
           <div className="join-form">
-            <h1>Kamen Chat</h1>
-            <h2>Join the Chat</h2>
-            {joinError && <div className="error-message">{joinError}</div>}
-            <form onSubmit={handleJoinChat}>
+              <h1>Kamen Chat</h1>
+              <h2>Join the Chat</h2>
+              
+              {/* Show error only here (not in chat) */}
+              {joinError && (
+                <div className="error-message">
+                  {joinError}
+                </div>
+              )}
+              
+              <form onSubmit={handleJoinChat}>
                 <div className="form-group">
                   <label>Enter Your Name</label>
                   <input
@@ -205,24 +232,22 @@ function App() {
                     value={username}
                     onChange={(e) => {
                       setUsername(e.target.value);
-                      if (isNameTaken) setIsNameTaken(false);
+                      setJoinError(''); // Clear error when typing
                     }}
                     placeholder="Your name"
                     required
                     autoFocus
-                    disabled={isJoining}
                   />
                 </div>
-                <button 
-                  type="submit" 
-                  className={`join-button ${isJoining || isNameTaken ? 'disabled-button' : ''}`}
+                <button
+                  type="submit"
                   disabled={isJoining || isNameTaken}
+                  className={`join-button ${isJoining ? 'joining' : ''}`}
                 >
                   {isJoining ? 'Joining...' : 'Join Chat'}
                 </button>
               </form>
-
-          </div>
+            </div>
         </div>
       ) : (
         <div className="chat-view">

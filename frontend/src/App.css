@@ -243,16 +243,16 @@ html, body, #root, .app {
 }
 
 .error-message {
-  color: #ff4d4d;
-  background-color: #ffe6e6;
-  padding: 10px;
-  border-radius: 5px;
-  margin-bottom: 15px;
-  border: 1px solid #ffb3b3;
+  color: #ff4d4f;
+  background: #fff2f0;
+  padding: 8px 12px;
+  border-radius: 4px;
+  margin-bottom: 16px;
+  border: 1px solid #ffccc7;
+  animation: fadeIn 0.3s ease-in;
 }
 
-/* .error-message {
-  color: red;
-  margin-bottom: 1em;
-  font-weight: bold;
-} */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
