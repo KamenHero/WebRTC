@@ -1,6 +1,6 @@
-from django.urls import re_path
-from signaling.consumers import SignalingConsumer  # adjust if in a different app
+from django.urls import path
+from .consumers import ChatConsumer
 
 websocket_urlpatterns = [
-    re_path(r'ws/signaling/', SignalingConsumer.as_asgi()),
+    path(r'ws/chat/<user_id>', ChatConsumer.as_asgi()),
 ]
