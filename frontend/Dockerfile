@@ -10,4 +10,3 @@ COPY scripts/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 ENTRYPOINT ["/frontend/scripts/entrypoint.sh"]
-# ENTRYPOINT ["sleep", "infinity"]
