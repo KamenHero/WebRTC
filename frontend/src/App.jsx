@@ -58,7 +58,7 @@ function App() {
           setJoinError('');
           setIsNameTaken(false);
         }, 3000);
-        return; // Important: Skip adding this as a chat message
+        return;
       }
       
       if (message.type === "join_success") {
@@ -103,7 +103,7 @@ function App() {
           isSystem: true
         }]);
       } else {
-        // ✅ Add this block to handle disconnect while joining
+        // handle disconnect while joining
         if (isJoining) {
           setIsJoining(false);
           setJoinError("Connection failed. Please try again.");
@@ -153,15 +153,6 @@ function App() {
     setInputValue('');
   };
 
-  // const handleJoinChat = (e) => {
-  //   e.preventDefault();
-  //   if (username.trim() === '' || isJoining || isNameTaken) return;
-    
-  //   setJoinError('');
-  //   setIsJoining(true);
-  //   setupWebSocket();
-  // };
-
   const timeoutRef = useRef();
 
   const handleJoinChat = (e) => {
@@ -169,7 +160,6 @@ function App() {
     if (username.trim() === '' || isJoining) return;
 
     // Reset all error/join states
-    // console.log(joinError);
     setJoinError('');
     setIsJoining(true);
     setIsNameTaken(false);
@@ -197,19 +187,6 @@ function App() {
       }
     };
   }, []);
-  
-  // Then in the WebSocket onmessage handler:
-  // if (message.type === "username_taken") {
-  //   setJoinError(`Username '${username}' is already taken. Please choose another name.`);
-  //   setIsNameTaken(true);
-  //   setIsJoining(false);
-    
-  //   if (socketRef.current) {
-  //     socketRef.current.close();
-  //     socketRef.current = null;
-  //   }
-  //   return;
-  // }
 
   return (
     <div className="app">
@@ -217,9 +194,7 @@ function App() {
         <div className="join-view">
           <div className="join-form">
               <h1>Kamen Chat</h1>
-              <h2>Join the Chat</h2>
-              
-              {/* Show error only here (not in chat) */}
+              <h2>Join the Chat</h2>              
               {
                 <div className="error-message" style={{display: joinError ? 'flex' : 'none'}}>
                   {joinError}
@@ -254,8 +229,7 @@ function App() {
       ) : (
         <div className="chat-view">
           <header className="chat-header">
-            <h2>#{channel.name}</h2>
-            {/* <div className="channel-description">{channel.description}</div> */}
+            <h2>{channel.name}</h2>
             <div className="user-info">Logged in as: {username}</div>
           </header>
           

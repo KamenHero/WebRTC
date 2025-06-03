@@ -1,9 +1,7 @@
-From node:24-bookworm
+From 22.16-bullseye
 
 WORKDIR /frontend
 
 RUN npm install
-
-RUN npm run build
 
 CMD ["npm","run","dev"]

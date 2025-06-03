@@ -89,7 +89,8 @@ html, body, #root, .app {
 }
 
 .chat-header {
-  color: #ef9ac4;
+  color: #f5469d;
+  background-color: #e3c1c1;
   padding: 1rem;
   background-image: url('./assets/background2.png');
   text-align: center;
@@ -98,7 +99,7 @@ html, body, #root, .app {
 
 .chat-header h2 {
   color: white;
-  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-family:revert;
   margin-bottom: 0.25rem;
 }
 
