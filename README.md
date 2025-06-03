@@ -55,16 +55,16 @@ make clear
 
 #### Step 1:
 
-- http://localhost:5173
+- Visit: http://localhost:5173
 
-![alt text](/Demo/image.png)
-
-#### Step 2:
-
-- Choose a name and enter the Group Chat.
-
-![alt text](/Demo/image-1.png)
+![Join Screen](./Demo/Join-Screen.png)
 
 #### Step 2:
 
-- Enjoy!
+- Choose a username and join the chat
+
+![chat-view](./Demo/chat-view.png)
+
+#### Step 2:
+
+- Choose a username and join the chat
