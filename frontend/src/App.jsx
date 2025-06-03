@@ -182,7 +182,6 @@ function App() {
     }, 5000);
   };
 
-  // Move the cleanup effect to the component's main useEffect
   useEffect(() => {
     return () => {
       clearTimeout(timeoutRef.current);
@@ -213,7 +212,7 @@ function App() {
                     value={username}
                     onChange={(e) => {
                       setUsername(e.target.value);
-                      setJoinError(''); // Clear error when typing
+                      setJoinError('');
                     }}
                     placeholder="Your name"
                     required
@@ -286,6 +285,3 @@ function App() {
 }
 
 export default App;
-
-// socketRef.current = new WebSocket(`ws://localhost:8000/ws/chat/${userId}`);
-// const userId = uuidv4();

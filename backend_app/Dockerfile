@@ -14,9 +14,3 @@ COPY scripts/entrypoint.sh ./entrypoint.sh
 RUN chmod +x ./entrypoint.sh
 
 ENTRYPOINT ["/backend_app/scripts/entrypoint.sh"]
-
-# RUN pip install --upgrade pip \
-#   && pip install -r requirements.txt
-
-
-# ENTRYPOINT ["sleep", "infinity"]
