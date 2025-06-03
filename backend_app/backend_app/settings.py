@@ -25,12 +25,13 @@ SECRET_KEY = 'django-insecure-k_lr9kxxcl70t7l^e1p6c)h=8_t)%jw!6(h^z)yoly9)z#v%yh
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["backend", "localhost", "127.0.0.1"]
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    "daphne",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -104,7 +105,7 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-ASGI_APPLICATION = "backend.asgi.application"
+ASGI_APPLICATION = "backend_app.asgi.application"
 
 CHANNEL_LAYERS = {
     "default": {

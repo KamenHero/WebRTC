@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
+import { v4 as uuidv4 } from 'uuid';
 
 function App() {
   const [currentView, setCurrentView] = useState('join');
@@ -22,8 +23,11 @@ function App() {
       socketRef.current.close();
       socketRef.current = null;
     }
-    const userId = crypto.randomUUID();
-    socketRef.current = new WebSocket(`ws://localhost:8000/ws/chat/${userId}`);
+    const userId = uuidv4();
+    const backendHost = window.location.hostname === 'localhost' 
+    ? 'localhost' 
+    : 'backend';
+    socketRef.current = new WebSocket(`ws://${backendHost}:8000/ws/chat/${userId}`);
 
     socketRef.current.onopen = () => {
       console.log('WebSocket connected');
@@ -73,7 +77,7 @@ function App() {
       const isSystem = message.sender?.name === 'System';
       
       setMessages(prev => [...prev, {
-        id: crypto.randomUUID(),
+        id: uuidv4(),
         text: message.content || message.message,
         sender: {
           id: isCurrentUser ? 1 : (isSystem ? 0 : 2),
@@ -95,7 +99,7 @@ function App() {
       console.log('WebSocket disconnected', event);
       if (currentView !== 'join') {
         setMessages(prev => [...prev, {
-          id: crypto.randomUUID(),
+          id: uuidv4(),
           text: "Connection lost. Trying to reconnect...",
           sender: { id: 0, name: 'System' },
           timestamp: new Date().toLocaleTimeString(),
@@ -130,7 +134,7 @@ function App() {
 
     // Optimistic UI update
     const newMessage = {
-      id: crypto.randomUUID(),
+      id: uuidv4(),
       text: inputValue,
       sender: {
         id: 1,
@@ -284,4 +288,4 @@ function App() {
 export default App;
 
 // socketRef.current = new WebSocket(`ws://localhost:8000/ws/chat/${userId}`);
-// const userId = crypto.randomUUID();
+// const userId = uuidv4();

@@ -1,16 +1,40 @@
 services:
   backend:
     container_name: backend
-    build: ./backend/backend_app
+    build: ./backend_app
     volumes:
       - ./backend_app:/backend_app
     ports:
       - "8000:8000"
+    expose:
+      - "8000"
+    networks:
+      - nw
+    environment:
+      - CHANNELS_ALLOWED_HOSTS=*
+      - CORS_ALLOWED_ORIGINS=http://frontend:5173,http://localhost:5173
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   frontend:
     build: ./frontend
     container_name: frontend
     ports:
-      - '3000:3000'
+      - '5173:5173'
     volumes:
       - ./frontend:/frontend
+    networks:
+      - nw
+    environment:
+      - REACT_APP_BACKEND_HOST=backend
+    depends_on:
+      - backend
+    
+
+networks:
+  nw:
+    driver: bridge
+    
