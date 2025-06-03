@@ -67,4 +67,4 @@ make clear
 
 #### Step 2:
 
-- Choose a username and join the chat
+- Enjoy real-time messaging!
