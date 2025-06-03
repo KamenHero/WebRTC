@@ -65,6 +65,6 @@ make clear
 
 ![chat-view](./Demo/chat-view.png)
 
-#### Step 2:
+#### Step 3:
 
 - Enjoy real-time messaging!
