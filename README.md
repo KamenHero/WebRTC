@@ -11,7 +11,6 @@ A modern real-time chat application built with React (frontend) and Python/Djang
 - **Message history** with timestamps
 - **System notifications** for user join/leave
 - **Dockerized** for easy deployment
-- **Typing indicators** (optional future feature)
 
 ## 🛠️ Tech Stack
 
@@ -31,8 +30,6 @@ A modern real-time chat application built with React (frontend) and Python/Djang
 ### Prerequisites
 - Docker
 - Docker Compose
-- Node.js (for local frontend development)
-- Python 3.8+ (for local backend development)
 
 ### Installation
 
