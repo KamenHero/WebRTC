@@ -26,8 +26,8 @@ function App() {
     const userId = uuidv4();
     const backendHost = window.location.hostname === 'localhost' 
     ? 'localhost' 
-    : 'backend';
-    socketRef.current = new WebSocket(`ws://${backendHost}:8000/ws/chat/${userId}`);
+    : window.location.hostname.replace("5173","8000");
+    socketRef.current = new WebSocket(`wss://${backendHost}/ws/chat/${userId}`);
 
     socketRef.current.onopen = () => {
       console.log('WebSocket connected');
