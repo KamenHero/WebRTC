@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import './App.css';
 import { v4 as uuidv4 } from 'uuid';
+import { FaUserCircle, FaSignOutAlt } from 'react-icons/fa';
 
 function App() {
   const [currentView, setCurrentView] = useState('join');
@@ -12,6 +13,8 @@ function App() {
   const [isNameTaken, setIsNameTaken] = useState(false);
   const messagesEndRef = useRef(null);
   const socketRef = useRef(null);
+  const [showUserMenu, setShowUserMenu] = useState(false);
+  const userMenuRef = useRef(null);
 
   const channel = {
     id: 1,
@@ -25,9 +28,9 @@ function App() {
     }
     const userId = uuidv4();
     const backendHost = window.location.hostname === 'localhost' 
-    ? 'localhost' 
+    ? 'localhost:8000'
     : window.location.hostname.replace("5173","8000");
-    socketRef.current = new WebSocket(`wss://${backendHost}/ws/chat/${userId}`);
+    socketRef.current = new WebSocket(`ws://${backendHost}/ws/chat/${userId}`);
 
     socketRef.current.onopen = () => {
       console.log('WebSocket connected');
@@ -114,6 +117,27 @@ function App() {
         }
       }
     };
+  };
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowUserMenu(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
+
+  const handleDisconnect = () => {
+    if (socketRef.current) {
+      socketRef.current.close();
+    }
+    setCurrentView('join');
+    setMessages([]);
+    window.location.reload(); // Refresh the page
   };
 
   useEffect(() => {
@@ -232,8 +256,27 @@ function App() {
       ) : (
         <div className="chat-view">
           <header className="chat-header">
-            <h2>{channel.name}</h2>
-            <div className="user-info">Logged in as: {username}</div>
+            <h2 className="header-msg">{channel.name}</h2>
+            <div 
+              className="user-info-container" 
+              ref={userMenuRef}
+              onClick={() => setShowUserMenu(!showUserMenu)}
+            >
+              <div className="user-info">
+                <FaUserCircle className="user-icon" />
+                <span>{username}</span>
+              </div>
+              {showUserMenu && (
+                <div className="user-menu">
+                  <button 
+                    className="disconnect-button"
+                    onClick={handleDisconnect}
+                  >
+                    <FaSignOutAlt /> Disconnect
+                  </button>
+                </div>
+              )}
+            </div>
           </header>
           
           <div className="chat-container">
